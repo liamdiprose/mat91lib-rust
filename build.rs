@@ -8,6 +8,7 @@ use std::vec::Vec;
 
 fn main() {
     //println!("cargo:root=mat91lib/sam4s");
+    let mut config_c_file = File::create("mat91lib/config.h").expect("Could not create config.h file");
     let bindings = bindgen::Builder::default()
         .clang_arg("-Imat91lib")
         .clang_arg("-Imat91lib/sam4s")
