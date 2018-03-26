@@ -2,6 +2,7 @@ extern crate bindgen;
 
 use std::env;
 use std::path::PathBuf;
+use std::path::Path;
 use std::fs::File;
 use std::io::{Read,Write};
 use std::vec::Vec;
@@ -18,7 +19,8 @@ fn main() {
         .generate()
         .expect("Could not generate bindings!");
 
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    let out_dir = env::var("OUT_DIR").unwrap();
+    let out_path = PathBuf::from(&out_dir);
     bindings
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Could not write bindings");
@@ -39,15 +41,18 @@ fn main() {
 
 
     Command::new("make")
+        .current_dir(&Path::new("mat91lib"))
         .args(&["-f", "mat91lib.mk",
                 "MCU=SAM4S8B",
-                "MAT91LIB_DIR=mat91lib/",
+                "MAT91LIB_DIR=.",
                 "PERIPHERALS=\"pwm\"",
                 "RUN_MODE=ROM",
                 "OPT=-01",
-                out_path.join("libmath91lib.a").as_path().display().to_string().as_str()
+                out_dir.as_str()
         ]);
 
-    println!("cargo:rustc-link-search=native={}", out_path);
+    std::fs::rename(&Path::new("mat91lib/libmat91lib.a"), &out_path.join("libmat91lib.a"));
+
+    println!("cargo:rustc-link-search=native={}", &out_dir);
     println!("cargo:rustc-link-lib=static=mat91lib");
 }
