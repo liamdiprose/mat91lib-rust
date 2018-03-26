@@ -11,6 +11,12 @@ use std::process::Command;
 fn main() {
     //println!("cargo:root=mat91lib/sam4s");
     let mut config_c_file = File::create("mat91lib/config.h").expect("Could not create config.h file");
+
+
+    let config_c_file = Path::new("config.h");
+
+    std::fs::copy(&config_c_file, &Path::new("mat91lib/config.h")).unwrap();
+
     let bindings = bindgen::Builder::default()
         .clang_arg("-Imat91lib")
         .clang_arg("-Imat91lib/sam4s")
@@ -40,18 +46,31 @@ fn main() {
     lib_file.write_all(&bindings_content).expect("Could not write bindings to src/lib.rs");
 
 
-    Command::new("make")
+    let output = Command::new("make")
         .current_dir(&Path::new("mat91lib"))
         .args(&["-f", "mat91lib.mk",
                 "MCU=SAM4S8B",
                 "MAT91LIB_DIR=.",
-                "PERIPHERALS=\"pwm\"",
+                "PERIPHERALS=pwm",
                 "RUN_MODE=ROM",
-                "OPT=-01",
-                out_dir.as_str()
-        ]);
+                "OPT=-O1",
+                format!("{}/libmat91lib.a", out_dir).as_str()
+        ])
+        .output()
+        .expect("Failed to make mat91lib");
 
-    std::fs::rename(&Path::new("mat91lib/libmat91lib.a"), &Path::new(&out_dir).join("libmat91lib.a"));
+    if !output.status.success() {
+        panic!(format!("Failed to make: Exit {}\n {}", output.status, String::from_utf8_lossy(&output.stderr)));
+    }
+
+
+
+//    let mut dest_library = PathBuf::from(&out_dir)
+//        .join("libmat91lib.a");
+//
+//    File::create(&dest_library).unwrap();
+//    std::fs::copy(&Path::new("mat91lib/libmat91lib.a"), &dest_library)
+//        .expect(format!("Could not copy library at {} to out_path {}", "mat91lib/libmat91lib.a", &out_dir).as_str());
 
     println!("cargo:rustc-link-search=native={}", out_dir);
     println!("cargo:rustc-link-lib=static=mat91lib");
