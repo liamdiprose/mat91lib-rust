@@ -56,7 +56,7 @@ fn main() {
         .args(&["-f", "mat91lib.mk",
                 "MCU=SAM4S8B",
                 "MAT91LIB_DIR=.",
-                "PERIPHERALS=pwm",
+                "PERIPHERALS=pwm spi",
                 "RUN_MODE=ROM",
                 "OPT=-O1",
                 format!("{}/libmat91lib.a", out_dir).as_str()
