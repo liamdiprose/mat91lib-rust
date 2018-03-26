@@ -1,0 +1,29 @@
+From 8e608f81eb576f71cbd4c2234e967f58d07ac1e1 Mon Sep 17 00:00:00 2001
+From: liam <ldi30@uclive.ac.nz>
+Date: Mon, 26 Mar 2018 16:14:40 +1300
+Subject: [PATCH] Added Static Library target
+
+---
+ mat91lib.mk | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/mat91lib.mk b/mat91lib.mk
+index ec9afe5..e34260e 100644
+--- a/mat91lib.mk
++++ b/mat91lib.mk
+@@ -198,6 +198,12 @@ $(TARGET): $(DEPDIR) $(OBJS) $(EXTRA_OBJS)
+ 	$(LD) $(OBJS) $(EXTRA_OBJS) $(LDFLAGS) -o $@ -lm -Wl,-Map=$(TARGET_MAP),--cref
+ 	$(SIZE) $@
+ 
++%.a: $(OBJS) $(EXTRA_OBJS)
++	ar rcs $@ $<
++
++static-library: libmat91lib.a
++
++
+ # Include the dependency files.
+ -include $(DEPS)
+ 
+-- 
+2.16.2
+

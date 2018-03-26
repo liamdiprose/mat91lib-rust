@@ -45,6 +45,11 @@ fn main() {
     bindings.read_to_end(&mut bindings_content).expect("Could not read bindings.rs file");
     lib_file.write_all(&bindings_content).expect("Could not write bindings to src/lib.rs");
 
+    Command::new("git")
+        .current_dir("mat91lib")
+        .args(&["apply", "../static-target.patch"])
+        .output()
+        .expect("Applying patch failed");
 
     let output = Command::new("make")
         .current_dir(&Path::new("mat91lib"))
