@@ -1,10 +1,12 @@
 extern crate bindgen;
+extern crate gcc;
 
 use std::env;
 use std::path::PathBuf;
 use std::fs::File;
 use std::io::{Read,Write};
 use std::vec::Vec;
+use std::process::Command;
 
 fn main() {
     //println!("cargo:root=mat91lib/sam4s");
@@ -36,5 +38,29 @@ fn main() {
     bindings.read_to_end(&mut bindings_content).expect("Could not read bindings.rs file");
     lib_file.write_all(&bindings_content).expect("Could not write bindings to src/lib.rs");
 
+    //gcc::compile_library("libmat91lib.a", &["mat91lib/pwm/pwm.c"]);
+//    gcc::Build::new()
+//        .include("mat91lib")
+//        .include("mat91lib/sam4s/")
+//        .include("mat91lib/sam4s/atmel")
+//        .define("__SAM4S__", None)
+//        .define("__SAM4S8B__", None)
+//        .file("mat91lib/mat91lib.h")
+//        .file("mat91lib/sam4s/mcu.c")
+//        .file("mat91lib/pwm/pwm.c")
+//        .file("mat91lib/sam4s/pio.c")
+//        .file("mat91lib/sam4s/mcu_sleep.c")
+//        .warnings_into_errors(false)
+//        .warnings(false)
+//        .compile("mat91lib");
 
+    Command::new("make")
+        .args(&["-f", "mat91lib.mk",
+                "MCU=SAM4S8B",
+                "MAT91LIB_DIR=mat91lib/",
+                "PERIPHERALS=\"pwm\"",
+                "RUN_MODE=ROM",
+                "OPT=-01",
+                out_path.join("libmath91lib.a").as_path().display().to_string().as_str()
+        ]);
 }
