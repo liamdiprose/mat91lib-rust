@@ -51,8 +51,8 @@ fn main() {
                 out_dir.as_str()
         ]);
 
-    std::fs::rename(&Path::new("mat91lib/libmat91lib.a"), &out_path.join("libmat91lib.a"));
+    std::fs::rename(&Path::new("mat91lib/libmat91lib.a"), &Path::new(&out_dir).join("libmat91lib.a"));
 
-    println!("cargo:rustc-link-search=native={}", &out_dir);
+    println!("cargo:rustc-link-search=native={}", out_dir);
     println!("cargo:rustc-link-lib=static=mat91lib");
 }
