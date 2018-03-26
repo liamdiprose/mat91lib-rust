@@ -37,21 +37,6 @@ fn main() {
     bindings.read_to_end(&mut bindings_content).expect("Could not read bindings.rs file");
     lib_file.write_all(&bindings_content).expect("Could not write bindings to src/lib.rs");
 
-    //gcc::compile_library("libmat91lib.a", &["mat91lib/pwm/pwm.c"]);
-//    gcc::Build::new()
-//        .include("mat91lib")
-//        .include("mat91lib/sam4s/")
-//        .include("mat91lib/sam4s/atmel")
-//        .define("__SAM4S__", None)
-//        .define("__SAM4S8B__", None)
-//        .file("mat91lib/mat91lib.h")
-//        .file("mat91lib/sam4s/mcu.c")
-//        .file("mat91lib/pwm/pwm.c")
-//        .file("mat91lib/sam4s/pio.c")
-//        .file("mat91lib/sam4s/mcu_sleep.c")
-//        .warnings_into_errors(false)
-//        .warnings(false)
-//        .compile("mat91lib");
 
     Command::new("make")
         .args(&["-f", "mat91lib.mk",
@@ -62,4 +47,7 @@ fn main() {
                 "OPT=-01",
                 out_path.join("libmath91lib.a").as_path().display().to_string().as_str()
         ]);
+
+    println!("cargo:rustc-link-search=native={}", out_path);
+    println!("cargo:rustc-link-lib=static=mat91lib");
 }
