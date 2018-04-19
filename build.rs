@@ -18,6 +18,8 @@ fn main() {
     std::fs::copy(&config_c_file, &Path::new("mat91lib/config.h")).unwrap();
 
     let bindings = bindgen::Builder::default()
+        .use_core()
+        .ctypes_prefix("ctypes")  // Use custom ctypes instead of std::ctypes
         .clang_arg("-Imat91lib")
         .clang_arg("-Imat91lib/sam4s")
         .clang_arg("-Imat91lib/sam4s/atmel")
