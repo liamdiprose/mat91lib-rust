@@ -8,3 +8,5 @@
 #include "pio.h"
 #include "pwm/pwm.h"
 #include "adc/adc.h"
+#include "twi/twi.h"
+#include "spi/spi.h"
