@@ -2,3 +2,4 @@ src/lib.rs
 .idea/
 Cargo.lock
 target/
+src/lib.rs
