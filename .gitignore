@@ -1,4 +1,4 @@
-
-/target/
-**/*.rs.bk
+src/lib.rs
+.idea/
 Cargo.lock
+target/
