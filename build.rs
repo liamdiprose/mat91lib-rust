@@ -40,6 +40,8 @@ fn main() {
         .write_all(include_bytes!("memory.x"))
         .unwrap();
 
+    println!("cargo:rustc-link-search={}", out_path.display());
+
     let mut lib_file = File::create("src/lib.rs").expect("Could not create src/lib file");
     let mut prelude = File::open("src/prelude.rs").expect("Could not open prelude file");
     let mut bindings = File::open(out_path.join("bindings.rs")).expect("Could not open bindings.rs");
