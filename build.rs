@@ -33,6 +33,13 @@ fn main() {
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Could not write bindings");
 
+
+    // Linker (FLASH / SRAM / .bss / etc)
+    File::create(out_path.join("memory.x"))
+        .unwrap()
+        .write_all(include_bytes!("memory.x"))
+        .unwrap();
+
     let mut lib_file = File::create("src/lib.rs").expect("Could not create src/lib file");
     let mut prelude = File::open("src/prelude.rs").expect("Could not open prelude file");
     let mut bindings = File::open(out_path.join("bindings.rs")).expect("Could not open bindings.rs");
