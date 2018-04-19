@@ -41,7 +41,7 @@
 #define RADIO_IRQ_PIO PA15_PIO
 
 
-#define __SAM4S__
-#define __SAM4S8B__
+//#define __SAM4S__
+//#define __SAM4S8B__
 #include "mat91lib.h"
 #include <stdint.h>
